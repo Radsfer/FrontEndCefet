@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div id="perfil">
+    <div id="perfil_fornecedor">
         <!-- CONTEUDO -->
 
     </div>
@@ -20,27 +20,28 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script>
-        var id_cliente;
+        var id_fornecedor;
         var url;
+
+
+        var url_string = window.location.href;
+        url = new URL(url_string);
+        id_fornecedor = url.searchParams.get("id_fornecedor");
+
         
-            var url_string = window.location.href;
-            url = new URL(url_string);
-            id_cliente = url.searchParams.get("id_cliente");
-            console.log(id_cliente);
-            axios.get('http://localhost:3013/clientes_byid/' + id_cliente)
-                .then(res => {
+            console.log(id_fornecedor);
+            axios.get('http://localhost:3013/fornecedores_byid/' + id_fornecedor).then(res => {
                     console.log(res)
-                    document.getElementById("perfil").innerHTML =
+                    document.getElementById("perfil_fornecedor").innerHTML =
                         `<div class="card mb-3" style="max-width: 540px;">` +
                         `<div class="row g-0">` +
                         `<div class="col-md-4">` +
-                        `<img src="http://localhost:3013/clientes/${res.data.id_cliente}.png" class="img-fluid rounded-start" alt="...">` +
+                        `<img src="http://localhost:3013/fornecedores/${res.data.id_fornecedor}.png" class="img-fluid rounded-start" alt="...">` +
                         `</div>` +
                         `<div class="col-md-8">` +
                         `<div class="card-body">` +
-                        `<h5 class="card-title">${res.data.nome + " " + res.data.sobrenome}</h5>` +
-                        `<p class="card-text">Email: ${res.data.email}</p>` +
-                        `<p class="card-text"><small class="text-body-secondary">${res.data.data_cadastro}</small></p>` +
+                        `<h5 class="card-title">${res.data.razao}</h5>` +
+                        `<p class="card-text">Contato: ${res.data.contato}</p>` +
                         `</div>` +
                         `</div>` +
                         `</div>` +
@@ -48,36 +49,35 @@
                 })
 
             setTimeout(function () {
-                exibirAlerta();
+                exibirAlerta_Fornecedor();
             }, 200);
-
-
-        function exibirAlerta() {
-
+        
 
 
 
-            var deletarCliente = url.searchParams.get("delete");
-            console.log("Delete", deletarCliente)
-            if (deletarCliente === "ok") {
+        function exibirAlerta_Fornecedor() {
+
+            var deletarFornecedor = url.searchParams.get("delete");
+            console.log("Delete", deletarFornecedor)
+            if (deletarFornecedor === "ok") {
                 console.log("Delete request is triggered.");
 
-                var confirmarExclusao = window.confirm("Você tem certeza de que deseja apagar este perfil?");
+                var confirmarExclusao = window.confirm("Você tem certeza de que deseja apagar este perfil fornecedor?");
 
                 if (confirmarExclusao) {
                     axios
-                        .post("http://localhost:3013/clientes_del/" + id_cliente)
+                        .post("http://localhost:3013/fornecedores_del/" + id_fornecedor)
                         .then((res) => {
-                            alert("Cliente apagado com sucesso!");
-                            window.location.href = "index.htm";
+                            alert("Fornecedor apagado com sucesso!");
+                            window.location.href = "fornecedor.html";
                         })
                         .catch(function (error) {
-                            console.error("Error deleting client:", error);
+                            console.error("Error deleting fornecedor:", error);
                         });
                 } else {
                     // O usuário optou por não apagar o perfil, faça algo se necessário
                     console.log("Operação de exclusão cancelada pelo usuário.");
-                    window.location.href = "index.htm";
+                    window.location.href = "fornecedor.html";
                 }
             }
         };
